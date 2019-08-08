@@ -14,6 +14,7 @@ package org.kitodo.mediaserver.cli.config;
 import org.kitodo.mediaserver.cli.commands.CacheClearCommand;
 import org.kitodo.mediaserver.cli.commands.ImportCommand;
 import org.kitodo.mediaserver.cli.commands.MainCommand;
+import org.kitodo.mediaserver.cli.commands.PdfJpgTestCommand;
 import org.kitodo.mediaserver.cli.commands.PerformCommand;
 import org.kitodo.mediaserver.cli.commands.PerformRequestedCommand;
 import org.kitodo.mediaserver.cli.commands.UpdateDbCommand;
@@ -44,7 +45,8 @@ public class CliConfiguration {
                                    ImportCommand importCommand,
                                    UpdateDbCommand updateDbCommand,
                                    PerformCommand performCommand,
-                                   PerformRequestedCommand performRequestedCommand) {
+                                   PerformRequestedCommand performRequestedCommand,
+                                   PdfJpgTestCommand pdfJpgTestCommand) {
 
         CommandLine commandLine = new CommandLine(mainCommand);
         commandLine.addSubcommand("cacheclear", cacheClearCommand);
@@ -52,6 +54,7 @@ public class CliConfiguration {
         commandLine.addSubcommand("updatedb", updateDbCommand);
         commandLine.addSubcommand("perform", performCommand);
         commandLine.addSubcommand("performrequested", performRequestedCommand);
+        commandLine.addSubcommand("pdfjpgtest", pdfJpgTestCommand);
         return commandLine;
     }
 
