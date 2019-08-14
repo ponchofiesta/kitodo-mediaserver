@@ -70,7 +70,7 @@ public abstract class AbstractConverter implements IConverter {
      * @param requiredParams required parameter
      * @throws Exception by fatal errors
      */
-    protected void checkParams(TreeMap<Integer, Map<String, FileEntry>> pages, Map<String, Object> parameter, String... requiredParams) {
+    protected void checkParams(TreeMap<Integer, Map<String, FileEntry>> pages, Map<String, ?> parameter, String... requiredParams) {
 
         if (pages == null) {
             throw new IllegalArgumentException("'pages' must not be null.");
@@ -98,7 +98,7 @@ public abstract class AbstractConverter implements IConverter {
      * @param parameter the parameter map
      * @return a size
      */
-    protected int getConversionSize(Map<String, Object> parameter) {
+    protected int getConversionSize(Map<String, ?> parameter) {
         try {
             return (Integer)parameter.get("size");
         } catch (NumberFormatException | NullPointerException e) {

@@ -41,7 +41,7 @@ public class AwtImageFileConverter extends AbstractConverter {
     private ObjectFactory<AwtImagePage> pageFactory;
 
     @Override
-    public InputStream convert(TreeMap<Integer, Map<String, FileEntry>> pages, Map<String, Object> parameter) throws Exception {
+    public InputStream convert(TreeMap<Integer, Map<String, FileEntry>> pages, Map<String, ?> parameter) throws Exception {
         checkParams(pages, parameter, "derivativePath", "target_mime");
 
         int size = getConversionSize(parameter);

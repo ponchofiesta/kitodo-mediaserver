@@ -39,9 +39,12 @@ public class PdfboxFileConverter extends AbstractConverter {
     private ObjectFactory<PdfboxPage> pageFactory;
 
     @Override
-    public InputStream convert(TreeMap<Integer, Map<String, FileEntry>> pages, Map<String, Object> parameter) throws Exception {
+    public InputStream convert(TreeMap<Integer, Map<String, FileEntry>> pages, Map<String, ?> parameter) throws Exception {
 
         checkParams(pages, parameter, "derivativePath", "target_mime");
+
+        String chapter = (String)parameter.get("chapter");
+        String toc = (String)parameter.get("toc");
 
         int size = getConversionSize(parameter);
 

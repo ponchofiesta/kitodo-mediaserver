@@ -65,7 +65,7 @@ public class SimpleIMSingleFileConverter extends AbstractConverter {
      * @throws Exception by fatal errors
      */
     @Override
-    public InputStream convert(TreeMap<Integer, Map<String, FileEntry>> pages, Map<String, Object> parameter) throws Exception {
+    public InputStream convert(TreeMap<Integer, Map<String, FileEntry>> pages, Map<String, ?> parameter) throws Exception {
 
         Notifier notifier = notifierFactory.getObject();
         String message;

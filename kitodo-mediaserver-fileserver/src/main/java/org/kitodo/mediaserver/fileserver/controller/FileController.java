@@ -92,9 +92,10 @@ public class FileController {
      * @throws HttpForbiddenException if disabling is configured and the work is disabled
      * @throws HttpNotFoundException if the file is not found and couldn't be produced
      */
-    @GetMapping(value = "${fileserver.filePathPattern}")
+    @GetMapping(value = {"${fileserver.filePathPattern}", "/chapter/{workId}/{logId}"})
     public void getFile(
             @PathVariable("workId") String workId,
+            @PathVariable(value = "logId", required = false) String logId,
             HttpServletRequest request,
             HttpServletResponse response)
             throws HttpForbiddenException, HttpNotFoundException {
