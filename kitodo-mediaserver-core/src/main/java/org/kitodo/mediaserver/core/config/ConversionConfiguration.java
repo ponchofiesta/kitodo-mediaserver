@@ -237,6 +237,12 @@ public class ConversionConfiguration {
         return converter;
     }
 
+    @Bean
+    public IConverter cachedPdfboxFileConverter() {
+        // TODO: A converter using cached files as master
+        return converter;
+    }
+
 
     /*
      * ACTIONS
@@ -255,6 +261,13 @@ public class ConversionConfiguration {
         convertAction.getConverters().put("image/jpeg", onDemandAwtFileConverter());
         convertAction.getConverters().put("application/pdf", onDemandPdfboxFileConverter());
         convertAction.setPatternExtractor(patternExtractor());
+        return convertAction;
+    }
+
+    @Bean(name = "cachedPdfboxFileConvertAction")
+    public IAction cachedPdfboxFileConvertAction() {
+        // TODO: use cached PDF file as master
+        convertAction.getConverters().put("application/pdf", cachedPdfboxFileConverter());
         return convertAction;
     }
 

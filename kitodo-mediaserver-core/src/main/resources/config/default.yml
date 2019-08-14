@@ -54,6 +54,7 @@ application:
 fileserver:
   rootUrl: https://example.com/files/
   filePathPattern: /files/{workId}/**
+  chapterPathPattern: /chapter/{workId}/{logicalId}
   caching: false
   cachePath: /tmp
   convertAction: onDemandAwtPdfboxSingleFileConvertAction

@@ -28,6 +28,7 @@ public class FileserverProperties {
     private String cacheClearCron;
     private Long cacheClearSince;
     private String filePathPattern;
+    private String chapterPathPattern;
     private String rootUrl;
     private String convertAction;
     private Map<String, List<String>> allowedNetworks;
@@ -73,6 +74,14 @@ public class FileserverProperties {
 
     public void setFilePathPattern(String filePathPattern) {
         this.filePathPattern = filePathPattern;
+    }
+
+    public String getChapterPathPattern() {
+        return chapterPathPattern;
+    }
+
+    public void setChapterPathPattern(String chapterPathPattern) {
+        this.chapterPathPattern = chapterPathPattern;
     }
 
     public String getRootUrl() {

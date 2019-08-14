@@ -84,42 +84,60 @@ public class SingleFileConvertAction implements IAction {
 
         mediaServerUtils.checkForRequiredParameter(parameter, "requestUrl");
         String requestUrl = parameter.get("requestUrl");
+        String logicalId = parameter.get("logicalId");
+        String mimeType = parameter.get("target_mime");
 
         File metsFile = mediaServerUtils.getMetsFileForWork(work);
 
-        /* Gets the path of the original file for the requested file from the mets file */
-        List<String> lines = metsReader.read(
+        TreeMap<Integer, Map<String, FileEntry>> pages = null;
+        Map<String, Object> convertParams = new HashMap<>(parameter);
+
+        if (logicalId == null) {
+            // Convert from master files
+
+            /* Gets the path of the original file for the requested file from the mets file */
+            List<String> lines = metsReader.read(
                 metsFile,
                 new AbstractMap.SimpleEntry<>("requestUrl", requestUrl),
                 new AbstractMap.SimpleEntry<>("sourceGrpId", metsProperties.getOriginalFileGrp()),
                 new AbstractMap.SimpleEntry<>("fulltextGrpId", metsProperties.getFulltextFileGrp())
-        );
-        Map<String, String> metsResult = (Map<String, String>) readResultParser.parse(lines);
+            );
+            Map<String, String> metsResult = (Map<String, String>) readResultParser.parse(lines);
 
-        TreeMap<Integer, Map<String, FileEntry>> pages = mediaServerUtils.parseMetsFilesResult(metsResult, work);
+            pages = mediaServerUtils.parseMetsFilesResult(metsResult, work);
 
-        FileEntry sourceFile = null;
-        if (!pages.isEmpty()) {
-            sourceFile = pages.firstEntry().getValue().get("master");
+            FileEntry sourceFile = null;
+            if (!pages.isEmpty()) {
+                sourceFile = pages.firstEntry().getValue().get("master");
+            }
+            if (sourceFile == null) {
+                throw new ConversionException("No source url for requested url " + requestUrl
+                    + " found in mets file " + metsFile.getAbsolutePath());
+            }
+
+            mimeType = pages.firstEntry().getValue().get("target").getMimeType();
+            try {
+                convertParams.put("size", Integer.parseInt(patternExtractor.extract(requestUrl)));
+            } catch (Exception ex) {
+                // size is optional here
+                LOGGER.debug("Could not extract size from requestURL.", ex);
+            }
+
+            LOGGER.info("Converting file from master " + sourceFile);
+        } else {
+            // Generate chapter file from existing file
+            mimeType = "application/pdf";
+
         }
-        if (sourceFile == null) {
-            throw new ConversionException("No source url for requested url " + requestUrl
-                + " found in mets file " + metsFile.getAbsolutePath());
+
+        // Get table of content from METS file
+        if ("application/pdf".equals(mimeType)) {
+            // TODO: Get table of content from METS file
         }
 
-        parameter.put("target_mime", pages.firstEntry().getValue().get("target").getMimeType());
+        parameter.put("target_mime", mimeType);
 
-        Map<String, Object> convertParams = new HashMap<>(parameter);
-        try {
-            convertParams.put("size", Integer.parseInt(patternExtractor.extract(requestUrl)));
-        } catch (Exception ex) {
-            // size is optional here
-            LOGGER.debug("Could not extract size from requestURL.", ex);
-        }
-
-        LOGGER.info("Converting file from master " + sourceFile);
-
-        IConverter converter = converters.get(parameter.get("target_mime"));
+        IConverter converter = converters.get(mimeType);
         if (converter == null) {
             throw new ConversionException("No converter set for MIME type '" + parameter.getOrDefault("target_mime", "") + "'");
         }

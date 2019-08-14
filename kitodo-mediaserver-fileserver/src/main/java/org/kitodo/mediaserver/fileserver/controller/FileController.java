@@ -87,15 +87,16 @@ public class FileController {
      * information in the METS-file of the work.
      *
      * @param workId the id of the work read from the path
+     * @param logicalId the id of the chapter in LOGICAL block of METS file
      * @param request the http request
      * @param response the http response
      * @throws HttpForbiddenException if disabling is configured and the work is disabled
      * @throws HttpNotFoundException if the file is not found and couldn't be produced
      */
-    @GetMapping(value = {"${fileserver.filePathPattern}", "/chapter/{workId}/{logId}"})
+    @GetMapping(value = {"${fileserver.filePathPattern}", "${fileserver.chapterPathPattern}"})
     public void getFile(
             @PathVariable("workId") String workId,
-            @PathVariable(value = "logId", required = false) String logId,
+            @PathVariable(value = "logicalId", required = false) String logicalId,
             HttpServletRequest request,
             HttpServletResponse response)
             throws HttpForbiddenException, HttpNotFoundException {
@@ -203,6 +204,9 @@ public class FileController {
                     Map<String, String> parameterMap = new HashMap<>();
                     parameterMap.put("derivativePath", workId + derivativePath);
                     parameterMap.put("requestUrl", completePath);
+                    if (logicalId != null) {
+                        parameterMap.put("logicalId", logicalId);
+                    }
 
                     inputStream = (InputStream) actionService.performImmediately(
                             work,
